@@ -1,0 +1,111 @@
+.home {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+/* Buscador */
+.search {
+  background: white;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 40px 35px;
+  border-radius: 24px;
+ box-shadow: 0 6px 20px rgba(0,0,0, 0.06);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+/*titulo*/
+.search h2 {
+  font-size: 30px;
+  margin-bottom: 25px;
+ color: #1e3a8a;
+ font-weight: 800;
+
+}
+/*barra*/
+.search-bar {
+  display: flex;
+  align-items: center;
+ gap: 10px;
+   }
+
+   /*input*/
+.search-bar input {
+  flex: 1;
+ height: 48px;
+ border-radius: 1px solid #dbe2ea;
+ padding: 0 16px;
+  font-size: 15px;
+   }
+
+.search-bar input:focus{
+  border-radius: #2563eb;
+  box-shadow: 0 0 0 4px rgb(37,99,235,0.15);
+}
+/*boton*/
+.search-bar button {
+min-width: 110px;
+}
+.search input {
+  margin: 10px;
+  padding: 10px;
+  width: 60%;
+}
+
+.search button {
+  padding: 10px 15px;
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+
+/* Categorías */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.category-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 150px;
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.category-card h4 {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.category-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Recomendaciones */
+.recommendations {
+  margin-top: 30px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}

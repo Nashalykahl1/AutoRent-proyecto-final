@@ -1,0 +1,58 @@
+.category-page {
+  padding: 20px;
+}
+
+/* HERO (banner arriba) */
+.category-hero {
+  background: linear-gradient(to right, #0f172a, #1e293b);
+  color: white;
+  padding: 40px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.category-hero h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.category-hero p {
+  opacity: 0.8;
+}
+
+/* BOTÓN VOLVER */
+.back-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #3b82f6;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #2563eb;
+}
+
+/* GRID */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 25px;
+}
+
+/* EFECTO NETFLIX 🔥 */
+.category-grid .card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.category-grid .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+}
