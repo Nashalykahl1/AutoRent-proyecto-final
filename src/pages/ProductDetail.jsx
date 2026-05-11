@@ -148,6 +148,39 @@ function ProductDetail() {
             {car.longDescription || car.description}
           </p>
 
+{car.features && car.features.length > 0 && (
+
+  <div className="features">
+
+    <h3>Características</h3>
+
+    <div className="features-grid">
+
+      {car.features.map((feature) => (
+
+        <div
+          className="feature-card"
+          key={feature.id}
+        >
+
+          <span className="feature-icon">
+            {feature.icon}
+          </span>
+
+          <p>
+            {feature.name}
+          </p>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  </div>
+
+)}
+
           <button className="reserve-btn">
             Reservar
           </button>

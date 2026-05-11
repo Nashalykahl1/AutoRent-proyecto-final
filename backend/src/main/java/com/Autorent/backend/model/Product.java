@@ -3,6 +3,7 @@ package com.Autorent.backend.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.List;
 
 @Setter
@@ -22,10 +23,12 @@ public class Product {
     private Double price;
 
     private String location;
-    private String category;
     @Column(columnDefinition = "TEXT")
     private String longDescription;
     @ElementCollection
     private List<String> images;
     private Boolean recommended;
+    @ManyToMany
+    private List<Feature> features;
+ private String category;
 }

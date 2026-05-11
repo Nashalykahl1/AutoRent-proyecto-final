@@ -235,3 +235,44 @@
 
   background: #1d4ed8;
 }
+
+.features {
+
+  margin-top: 30px;
+}
+
+.features h3 {
+
+  margin-bottom: 15px;
+
+  font-size: 22px;
+}
+
+.features-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 12px;
+}
+
+.feature-card {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  background: #f3f4f6;
+
+  padding: 12px;
+
+  border-radius: 14px;
+}
+
+.feature-icon {
+
+  font-size: 22px;
+}
