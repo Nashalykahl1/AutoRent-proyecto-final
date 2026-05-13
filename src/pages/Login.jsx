@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { useLocation } from "react-router-dom";
 
 function Login() {
 
@@ -11,6 +12,8 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
+
+  const location = useLocation();
 
   function handleLogin(e) {
 
@@ -66,6 +69,14 @@ function Login() {
   return (
 
     <div className="login-container">
+
+      {location.state?.message && (
+
+  <p className="login-message">
+    {location.state.message}
+  </p>
+
+)}
 
       <form
         className="login-form"

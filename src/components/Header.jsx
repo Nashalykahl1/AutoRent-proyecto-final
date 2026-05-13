@@ -53,6 +53,16 @@ function Header() {
                 >
                     ❤️ 
                   </Link>
+
+               <Link to="/history">
+
+  <button className="nav-btn">
+
+    Mis reservas
+
+  </button>
+
+</Link>   
           {!user ? (
 
             <>

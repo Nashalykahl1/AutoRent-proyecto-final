@@ -185,6 +185,28 @@ const navigate = useNavigate();
 
   }
 
+  function handleReserve() {
+
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
+    );
+
+  if (!user) {
+
+    navigate("/login", {
+      state: {
+        message:
+          "Debés iniciar sesión para reservar."
+      }
+    });
+
+    return;
+  }
+
+  navigate(`/reservation/${id}`);
+}
+
   // ERROR
   if (error) {
 
@@ -459,7 +481,7 @@ const navigate = useNavigate();
 
           </div>
 
-          <button className="reserve-btn">
+          <button className="reserve-btn" onClick={handleReserve}>
 
             Reservar
 

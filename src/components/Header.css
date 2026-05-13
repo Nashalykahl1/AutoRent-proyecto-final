@@ -215,3 +215,33 @@
   background: #dbeafe;
 
 }
+
+.nav-btn {
+
+  background: #2563eb;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  margin-left: 12px;
+
+}
+
+.nav-btn:hover {
+
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+}
