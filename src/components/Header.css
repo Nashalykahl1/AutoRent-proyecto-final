@@ -180,3 +180,38 @@
 
   text-decoration: underline;
 }
+
+
+.favorites-link {
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #eff6ff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-decoration: none;
+
+  font-size: 20px;
+
+  transition: 0.3s;
+
+  margin-right: 12px;
+
+}
+
+.favorites-link:hover {
+
+  transform: scale(1.1);
+
+  background: #dbeafe;
+
+}

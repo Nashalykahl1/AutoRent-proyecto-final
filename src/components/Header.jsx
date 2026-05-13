@@ -47,7 +47,12 @@ function Header() {
         </div>
 
         <div className="header-right">
-
+    <Link 
+              to="/favorites"
+              className="favorites-link"
+                >
+                    ❤️ 
+                  </Link>
           {!user ? (
 
             <>
@@ -70,49 +75,57 @@ function Header() {
 
           ) : (
 
-            <div className="user-box">
+            <>
+              <div className="user-box">
 
-              <div className="avatar">
+                <div className="avatar">
 
-                {user.name?.charAt(0)}
-                {user.lastname?.charAt(0)}
+                  {user.name?.charAt(0)}
+                  {user.lastname?.charAt(0)}
+
+                </div>
+
+                <div>
+
+                  <p className="welcome">
+                    Hola,
+                  </p>
+
+                  <h4>
+                    {user.name}
+                  </h4>
+
+                </div>
+
+                <button
+                  className="logout-btn"
+                  onClick={logout}
+                >
+
+                  Cerrar sesión
+
+                </button>
 
               </div>
 
-              <div>
-
-                <p className="welcome">
-                  Hola,
-                </p>
-
-                <h4>
-                  {user.name}
-                </h4>
-
-              </div>
-
-              <button
-                className="logout-btn"
-                onClick={logout}
-              >
-
-                Cerrar sesión
-
-              </button>
-
-            </div>
+            </>
 
           )}
 
-{user?.admin && (
-<Link to="/admin">
+          {user?.admin && (
 
-            <button className="btn-admin">
-              Administración
-            </button>
+            <Link to="/admin">
 
-          </Link>
-       )}
+              <button className="btn-admin">
+
+                Administración
+
+              </button>
+
+            </Link>
+
+          )}
+
         </div>
 
       </div>

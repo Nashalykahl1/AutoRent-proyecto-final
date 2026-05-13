@@ -12,6 +12,9 @@ function AdminPage() {
 
   const [features, setFeatures] = useState([]);
 
+  const [categories, setCategories]
+    = useState([]);
+
   const [editingFeature, setEditingFeature]
     = useState(null);
 
@@ -53,6 +56,8 @@ function AdminPage() {
 
     fetchFeatures();
 
+    fetchCategories();
+
   }, []);
 
   // PRODUCTOS
@@ -79,6 +84,15 @@ function AdminPage() {
     fetch("http://localhost:8080/features")
       .then(res => res.json())
       .then(data => setFeatures(data));
+
+  }
+
+  // CATEGORIES
+  function fetchCategories() {
+
+    fetch("http://localhost:8080/categories")
+      .then(res => res.json())
+      .then(data => setCategories(data));
 
   }
 
@@ -226,6 +240,8 @@ function AdminPage() {
 
         alert("Categoría agregada 😎");
 
+        fetchCategories();
+
         setCategory({
 
           title: "",
@@ -337,6 +353,31 @@ function AdminPage() {
 
   }
 
+  // ELIMINAR CATEGORY
+  function deleteCategory(id, title) {
+
+    const confirmDelete = window.confirm(
+      `¿Seguro que querés eliminar la categoría ${title}?`
+    );
+
+    if (!confirmDelete) return;
+
+    fetch(
+      `http://localhost:8080/categories/${id}`,
+      {
+        method: "DELETE"
+      }
+    )
+      .then(() => {
+
+        alert("Categoría eliminada 😎");
+
+        fetchCategories();
+
+      });
+
+  }
+
   // ADMIN
   function toggleAdmin(user) {
 
@@ -435,6 +476,38 @@ function AdminPage() {
         </button>
 
       </form>
+
+      {categories.map(category => (
+
+        <div
+          className="product-admin"
+          key={category.id}
+        >
+
+          <h3>
+            {category.title}
+          </h3>
+
+          <p>
+            {category.description}
+          </p>
+
+          <button
+            onClick={() =>
+              deleteCategory(
+                category.id,
+                category.title
+              )
+            }
+          >
+
+            Eliminar
+
+          </button>
+
+        </div>
+
+      ))}
 
       <hr />
 

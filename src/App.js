@@ -7,6 +7,7 @@ import CategoryPage from "./pages/CategoryPage";
 import AdminPage from "./pages/AdminPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import FavoritesPage from "./pages/FavoritesPage";
 
 
 
@@ -22,6 +23,8 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/favorites"element={<FavoritesPage />}/>
+
       </Routes>
 
       <Footer />
