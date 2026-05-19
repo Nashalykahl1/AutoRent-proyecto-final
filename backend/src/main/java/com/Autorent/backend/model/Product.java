@@ -11,24 +11,33 @@ import java.util.List;
 @Entity
 public class Product {
 
-    // setters
-    // getters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
     private String description;
+
     private String image;
+
     private Double price;
 
     private String location;
+
     @Column(columnDefinition = "TEXT")
     private String longDescription;
+
     @ElementCollection
     private List<String> images;
+
     private Boolean recommended;
+
     @ManyToMany
     private List<Feature> features;
- private String category;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
 }

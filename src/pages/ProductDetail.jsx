@@ -33,44 +33,19 @@ const navigate = useNavigate();
 
   // REVIEWS
   const [reviews, setReviews]
-    = useState([
-    {
-
-      id: 1,
-
-      user: "Camila",
-
-      rating: 5,
-
-      comment:
-        "Excelente auto y muy cómodo.",
-
-      date: "12/05/2026"
-
-    },
-
-    {
-
-      id: 2,
-
-      user: "Lucas",
-
-      rating: 4,
-
-      comment:
-        "Muy buena experiencia.",
-
-      date: "10/05/2026"
-
-    }
-
-  ]);
+    = useState([])
 
   const [newReview, setNewReview]
     = useState("");
 
   const [rating, setRating]
     = useState(0);
+
+    const [reviewError, setReviewError]
+  = useState("");
+
+const [reviewSuccess, setReviewSuccess]
+  = useState("");
 
   const user = JSON.parse(
     localStorage.getItem("user")
@@ -112,6 +87,10 @@ const navigate = useNavigate();
 
           setCar(foundCar);
 
+          fetch(`http://localhost:8080/reviews/${id}`)
+           .then(res => res.json())
+           .then(data => setReviews(data));
+
           setError(false);
 
         } else {
@@ -139,51 +118,78 @@ const navigate = useNavigate();
   // AGREGAR REVIEW
   function addReview() {
 
-    if(!user) {
+  if(!user) {
 
-      alert(
-        "Tenés que iniciar sesión 😢"
-      );
+    setReviewError(
+      "Tenés que iniciar sesión 😢"
+    );
 
-      return;
-    }
+    setReviewSuccess("");
 
-    if(!newReview || rating === 0) {
+    return;
+  }
 
-      alert(
-        "Completá comentario y estrellas"
-      );
+  if(!newReview || rating === 0) {
 
-      return;
-    }
+    setReviewError(
+      "Completá comentario y estrellas"
+    );
 
-    const today =
-      new Date().toLocaleDateString();
+    setReviewSuccess("");
 
-    const review = {
+    return;
+  }
 
-      id: Date.now(),
+  const today =
+    new Date().toLocaleDateString();
 
-      user: user.name,
+  const review = {
 
-      rating,
+  userName: user.name,
 
-      comment: newReview,
+  rating,
 
-      date: today
+  comment: newReview,
 
-    };
+  date: today,
+
+  product: car
+
+};
+
+fetch("http://localhost:8080/reviews", {
+
+  method: "POST",
+
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  body: JSON.stringify(review)
+
+})
+  .then(res => res.json())
+
+  .then(savedReview => {
 
     setReviews([
-      review,
+      savedReview,
       ...reviews
     ]);
+
+    setReviewSuccess(
+      "Reseña publicada correctamente 😎"
+    );
+
+    setReviewError("");
 
     setNewReview("");
 
     setRating(0);
 
-  }
+  });
+
+}
 
   function handleReserve() {
 
@@ -588,6 +594,22 @@ const navigate = useNavigate();
 
               </div>
 
+              {reviewSuccess && (
+
+        <p className="success-message">
+            {reviewSuccess}
+       </p>
+
+        )}
+
+      {reviewError && (
+
+      <p className="error-message">
+         {reviewError}
+         </p>
+
+         )}
+
               <textarea
                 placeholder="Escribí tu opinión..."
                 value={newReview}
@@ -623,7 +645,7 @@ const navigate = useNavigate();
                   <div className="review-top">
 
                     <h4>
-                      {review.user}
+                      {review.userName}
                     </h4>
 
                     <span>

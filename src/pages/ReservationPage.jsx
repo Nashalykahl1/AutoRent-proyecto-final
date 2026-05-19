@@ -28,7 +28,10 @@ const [city, setCity]
 const [notes, setNotes]
   = useState("");
 
-const [reservationError, setReservationError]
+ const [reservationError, setReservationError]
+  = useState("");
+
+const [reservationSuccess, setReservationSuccess]
   = useState("");
 
   // FECHAS OCUPADAS
@@ -60,8 +63,7 @@ const [reservationError, setReservationError]
 
 }, [id]);
 
-function handleReservation() {
-  
+ function handleReservation() {
 
   if (!startDate || !endDate) {
 
@@ -69,30 +71,54 @@ function handleReservation() {
       "Seleccioná un rango de fechas."
     );
 
+    setReservationSuccess("");
+
     return;
   }
 
   setReservationError("");
+const reservation = {
 
-  alert(
-  `📩 Correo enviado a ${user.email}
+  userId: user.id,
 
-Reserva confirmada para:
-${car.name}
+  productId: car.id,
 
-Fechas:
-${startDate?.toLocaleDateString()}
-al
-${endDate?.toLocaleDateString()}`
-);
+  productName: car.name,
 
-  navigate("/reservation-success");
+  startDate:
+    startDate.toLocaleDateString(),
 
-    alert(
-      "Reserva realizada 😎"
-    );
+  endDate:
+    endDate.toLocaleDateString(),
 
-  }
+  city,
+
+  notes
+
+};
+
+fetch("http://localhost:8080/reservations", {
+
+  method: "POST",
+
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  body: JSON.stringify(reservation)
+
+});
+  setReservationSuccess(
+    `📩 Correo enviado a ${user.email}`
+  );
+
+  setTimeout(() => {
+
+    navigate("/reservation-success");
+
+  }, 1500);
+
+}
 
   if (!car) {
 
@@ -248,6 +274,14 @@ ${endDate?.toLocaleDateString()}`
 
   <p className="reservation-error">
     {reservationError}
+  </p>
+
+)}
+
+{reservationSuccess && (
+
+  <p className="success-message">
+    {reservationSuccess}
   </p>
 
 )}

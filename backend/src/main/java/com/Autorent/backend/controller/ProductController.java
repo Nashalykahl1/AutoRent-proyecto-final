@@ -2,54 +2,144 @@ package com.Autorent.backend.controller;
 
 import com.Autorent.backend.model.Product;
 import com.Autorent.backend.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
 
     private final ProductService service;
 
-    public ProductController(ProductService service) {
+    public ProductController(
+            ProductService service
+    ) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Product> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<Product>>
+    getAll() {
+
+        return ResponseEntity.ok(
+                service.getAll()
+        );
+
     }
 
     @GetMapping("/random")
-    public List<Product> getRandom() {
-        return service.getRandom();
+    public ResponseEntity<List<Product>>
+    getRandom() {
+
+        return ResponseEntity.ok(
+                service.getRandom()
+        );
+
     }
 
-    @GetMapping("/{id}") // ✅ ESTE ES EL IMPORTANTE
-    public Product getById(@PathVariable Long id) {
-        return service.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(
+            @PathVariable Long id
+    ) {
+
+        try {
+
+            return ResponseEntity.ok(
+                    service.findById(id)
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
+
     @GetMapping("/recommended")
-    public List<Product> getRecommended() {
-        return service.getRecommended();
+    public ResponseEntity<List<Product>>
+    getRecommended() {
+
+        return ResponseEntity.ok(
+                service.getRecommended()
+        );
+
     }
 
     @PostMapping
-    public Product create(@RequestBody Product p) {
-        return service.save(p);
+    public ResponseEntity<?> create(
+            @RequestBody Product p
+    ) {
+
+        try {
+
+            return ResponseEntity.ok(
+                    service.save(p)
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product p) {
-        p.setId(id);
-        return service.save(p);
+    public ResponseEntity<?> update(
+
+            @PathVariable Long id,
+
+            @RequestBody Product p
+
+    ) {
+
+        try {
+
+            p.setId(id);
+
+            return ResponseEntity.ok(
+                    service.save(p)
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<?> delete(
+            @PathVariable Long id
+    ) {
+
+        try {
+
+            service.delete(id);
+
+            return ResponseEntity.ok(
+                    "Producto eliminado"
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 
 }

@@ -24,7 +24,17 @@ public class CategoryService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+
+        Category category =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Categoría no encontrada"
+                                )
+                        );
+
+        repository.delete(category);
+
     }
 }
 

@@ -1,70 +1,221 @@
-# Getting Started with Create React App
+AUTORENT 🚗
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Descripción:
 
-## Available Scripts
+*AutoRent es una aplicación full stack desarrollada con React y Spring Boot para la gestión y reserva de vehículos.
 
-In the project directory, you can run:
+*El proyecto permite:
 
-### `npm start`
+*Registro e inicio de sesión de usuarios
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+*Gestión de productos (autos)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+*Sistema de favoritos
 
-### `npm test`
+*Sistema de reseñas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*Reservas
 
-### `npm run build`
+*Panel de administración
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+*Seguridad con Spring Security
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+*Contraseñas encriptadas con BCrypt
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+TECNOLOGÍAS UTILIZADAS:
 
-### `npm run eject`
+Frontend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+*React
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+*React Router
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+*CSS
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+*Fetch API
 
-## Learn More
+*LocalStorage
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+----
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Backend
 
-### Code Splitting
+*Java 17
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+*Spring Boot
 
-### Analyzing the Bundle Size
+*Spring Data JPA
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+*Spring Security
 
-### Making a Progressive Web App
+*H2 Database
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+*Maven
 
-### Advanced Configuration
+*Lombok
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+CÓMO EJECUTAR EL PROYECTO:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Backend
 
-### `npm run build` fails to minify
+1. Abrir la carpeta backend en IntelliJ IDEA o VS Code.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+2. Verificar que Java 17 esté instalado.
+
+3. Instalar dependencias Maven:
+mvn clean install
+
+4. Ejecutar la aplicación Spring Boot.
+
+5. El backend correrá en:
+http://localhost:8080
+
+
+---
+
+Frontend
+
+1. Abrir la carpeta frontend.
+
+2. Instalar dependencias:
+npm install
+
+3. Ejecutar React:
+npm start
+
+4. El frontend correrá en:
+http://localhost:3000
+
+
+BASE DE DATOS:
+
+El proyecto utiliza H2 Database.
+
+Consola H2
+http://localhost:8080/h2-console
+
+Configuración
+
+JDBC URL:
+jdbc:h2:file:./data/autosdb
+
+User:
+sa
+
+Password:
+(vacío)
+
+
+FUNCIONALIDADES IMPLEMENTADAS:
+
+Usuarios
+
+Registro
+
+Login
+
+Actualización de usuario
+
+Roles de administrador
+
+Contraseñas encriptadas con BCrypt
+
+Validaciones con @Valid
+
+
+
+---
+
+Productos
+
+Listado de productos
+Productos recomendados
+Productos aleatorios
+Crear producto
+Editar producto
+Eliminar producto
+Relación JPA con categorías
+
+---
+
+Favoritos
+
+Agregar favoritos
+Eliminar favoritos
+Persistencia en base de datos
+Relación con usuario
+
+---
+
+Reseñas
+
+Crear reseñas
+Consultar reseñas por producto
+Persistencia backend
+
+---
+
+Reservas
+
+Crear reservas
+Consultar reservas por usuario
+Persistencia backend
+
+---
+
+Seguridad
+
+El proyecto utiliza Spring Security.
+Características
+Protección de rutas
+Endpoints configurados por permisos
+Contraseñas encriptadas
+Validaciones backend
+DTOs para proteger información sensible
+Manejo global de excepciones
+
+---
+
+Arquitectura
+
+El backend está organizado utilizando arquitectura en capas:
+Controller
+Service
+Repository
+Model
+DTO
+Config
+Exception
+
+---
+
+Endpoints principales
+
+Usuarios
+POST /users/register
+POST /users/login
+PUT /users/{id}
+
+Productos
+GET /products
+GET /products/random
+GET /products/recommended
+POST /products
+PUT /products/{id}
+DELETE /products/{id}
+
+Favoritos
+GET /favorites/{userId}
+POST /favorites
+DELETE /favorites/{id}
+
+Reviews
+GET /reviews/{productId}
+POST /reviews
+
+Reservas
+GET /reservations/{userId}
+POST /reservations
+
+

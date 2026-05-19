@@ -16,65 +16,109 @@ function Register() {
 
   const [password, setPassword] = useState("");
 
+  const [confirmPassword,setConfirmPassword] = useState("");
+
+const [successMessage,setSuccessMessage] = useState(""); 
+
   const [error, setError] = useState("");
 
   function handleRegister(e) {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    if(
-      !name ||
-      !lastname ||
-      !email ||
-      !password
-    ) {
+  setError("");
 
-      setError(
-        "Completá todos los campos"
+  setSuccessMessage("");
+
+  if(
+    !name ||
+    !lastname ||
+    !email ||
+    !password ||
+    !confirmPassword
+  ) {
+
+    setError(
+      "Completá todos los campos"
+    );
+
+    return;
+  }
+
+  if(!email.includes("@")) {
+
+    setError(
+      "Ingresá un email válido"
+    );
+
+    return;
+  }
+
+  if(password.length < 6) {
+
+    setError(
+      "La contraseña debe tener mínimo 6 caracteres"
+    );
+
+    return;
+  }
+
+  if(password !== confirmPassword) {
+
+    setError(
+      "Las contraseñas no coinciden"
+    );
+
+    return;
+  }
+
+  fetch("http://localhost:8080/users/register", {
+
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      name,
+      lastname,
+      email,
+      password,
+    }),
+
+  })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data)
       );
 
-      return;
-    }
+      setSuccessMessage(
+        "Cuenta creada correctamente 😎"
+      );
 
-    fetch("http://localhost:8080/users/register", {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        name,
-        lastname,
-        email,
-        password,
-      }),
-
-    })
-
-      .then(res => res.json())
-
-      .then(data => {
-
-        localStorage.setItem(
-          "user",
-          JSON.stringify(data)
-        );
+      setTimeout(() => {
 
         navigate("/");
 
-      })
+      }, 1500);
 
-      .catch(() => {
+    })
 
-        setError(
-          "Error al registrarse"
-        );
+    .catch(() => {
 
-      });
+      setError(
+        "Error al registrarse"
+      );
 
-  }
+    });
+
+}
 
   return (
 
@@ -125,12 +169,26 @@ function Register() {
           }
         />
 
+        <input
+       type="password"
+      placeholder="Confirmar contraseña"
+      value={confirmPassword}
+       onChange={(e) =>
+    setConfirmPassword(e.target.value)
+  }
+/>
         {error && (
           <p className="error">
             {error}
           </p>
         )}
+      {successMessage && (
 
+       <p className="success">
+        {successMessage}
+       </p>
+
+)}
         <button type="submit">
           Registrarme
         </button>

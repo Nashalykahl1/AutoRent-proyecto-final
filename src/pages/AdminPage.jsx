@@ -15,6 +15,12 @@ function AdminPage() {
   const [categories, setCategories]
     = useState([]);
 
+    const [successMessage, setSuccessMessage]
+  = useState("");
+
+const [errorMessage, setErrorMessage]
+  = useState("");
+
   const [editingFeature, setEditingFeature]
     = useState(null);
 
@@ -150,74 +156,88 @@ function AdminPage() {
   }
 
   // AGREGAR PRODUCTO
-  function handleSubmit(e) {
+function handleSubmit(e) {
 
     e.preventDefault();
 
+    console.log("submit funcionando");
+console.log(product);
+
     const newProduct = {
 
-      ...product,
+        ...product,
 
-      price: Number(product.price),
+        price: Number(product.price),
 
-      images: product.images.split(",")
+        images: product.images,
+
+        category: {
+            id: Number(product.category)
+        }
 
     };
 
     fetch("http://localhost:8080/products", {
 
-      method: "POST",
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-      body: JSON.stringify(newProduct)
+        body: JSON.stringify(newProduct)
 
     })
 
-      .then(res => {
+    .then(res => {
 
-        if(!res.ok) {
+        if (!res.ok) {
 
-          throw new Error(
-            "Ese producto ya existe"
-          );
+            throw new Error("Error al agregar producto");
+
         }
 
         return res.json();
 
-      })
+    })
 
-      .then(() => {
+    .then(() => {
 
-        alert("Producto agregado");
+        setSuccessMessage(
+            "Producto agregado correctamente 😎"
+        );
+
+        setErrorMessage("");
 
         fetchProducts();
 
         setProduct({
 
-          name: "",
-          description: "",
-          longDescription: "",
-          image: "",
-          images: [],
-          price: "",
-          category: "",
-          location: "",
-          recommended: false
+            name: "",
+            description: "",
+            longDescription: "",
+            image: "",
+            images: [],
+            price: "",
+            category: "",
+            location: "",
+            recommended: false
 
         });
 
-      })
+    })
 
-      .catch(err => {
+    .catch(err => {
 
-        alert(err.message);
+        console.log(err);
 
-      });
+        setErrorMessage(err.message);
 
-  }
+        setSuccessMessage("");
+
+    });
+
+}
 
   // AGREGAR CATEGORY
   function handleCategorySubmit(e) {
@@ -238,7 +258,10 @@ function AdminPage() {
 
       .then(() => {
 
-        alert("Categoría agregada 😎");
+        setSuccessMessage(
+  "Categoría agregada 😎"
+     );
+      setErrorMessage("");
 
         fetchCategories();
 
@@ -279,7 +302,11 @@ function AdminPage() {
 
         .then(() => {
 
-          alert("Característica editada 😎");
+          setSuccessMessage(
+  "Característica editada 😎"
+           );
+
+        setErrorMessage("");
 
           fetchFeatures();
 
@@ -312,7 +339,11 @@ function AdminPage() {
 
       .then(() => {
 
-        alert("Característica agregada 😎");
+        setSuccessMessage(
+  "Característica agregada 😎"
+            );
+
+     setErrorMessage("");
 
         fetchFeatures();
 
@@ -370,7 +401,11 @@ function AdminPage() {
     )
       .then(() => {
 
-        alert("Categoría eliminada 😎");
+        setSuccessMessage(
+  "Categoría eliminada 😎"
+            );
+
+    setErrorMessage("");
 
         fetchCategories();
 
@@ -439,6 +474,22 @@ function AdminPage() {
       <h1>
         Panel Administrador
       </h1>
+
+      {successMessage && (
+
+  <p className="success-message">
+    {successMessage}
+  </p>
+
+)}
+
+{errorMessage && (
+
+  <p className="error-message">
+    {errorMessage}
+  </p>
+
+)}
 
       {/* CATEGORÍAS */}
       <h2>Agregar categoría</h2>

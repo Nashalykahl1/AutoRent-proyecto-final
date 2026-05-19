@@ -1,43 +1,46 @@
 package com.Autorent.backend.controller;
 
-import com.Autorent.backend.model.Category;
-import com.Autorent.backend.service.CategoryService;
+import com.Autorent.backend.model.Favorite;
+import com.Autorent.backend.service.FavoriteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/favorites")
 @CrossOrigin(origins = "http://localhost:3000")
-public class CategoryController {
+public class FavoriteController {
 
-    private final CategoryService service;
+    private final FavoriteService service;
 
-    public CategoryController(
-            CategoryService service
+    public FavoriteController(
+            FavoriteService service
     ) {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Category>> getAll() {
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Favorite>>
+    getFavorites(
+            @PathVariable Long userId
+    ) {
 
         return ResponseEntity.ok(
-                service.getAll()
+                service.getByUser(userId)
         );
 
     }
 
     @PostMapping
     public ResponseEntity<?> save(
-            @RequestBody Category category
+            @RequestBody Favorite favorite
     ) {
 
         try {
 
             return ResponseEntity.ok(
-                    service.save(category)
+                    service.save(favorite)
             );
 
         } catch (RuntimeException e) {
@@ -60,7 +63,7 @@ public class CategoryController {
             service.delete(id);
 
             return ResponseEntity.ok(
-                    "Categoría eliminada"
+                    "Favorito eliminado"
             );
 
         } catch (RuntimeException e) {

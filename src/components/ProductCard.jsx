@@ -53,76 +53,114 @@ const review =
   const [isFavorite, setIsFavorite]
     = useState(false);
 
-  // VERIFICAR FAVORITO
-  useEffect(() => {
+// VERIFICAR FAVORITO
+useEffect(() => {
 
-    const favorites =
-      JSON.parse(
-        localStorage.getItem("favorites")
-      ) || [];
-
-    const exists = favorites.find(
-      fav => fav.id === car.id
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
     );
 
-    setIsFavorite(!!exists);
+  if(!user) return;
 
-  }, [car.id]);
+  fetch(
+    `http://localhost:8080/favorites/${user.id}`
+  )
+    .then(res => res.json())
 
-  // FAVORITOS
-  function toggleFavorite() {
+    .then(data => {
 
-    const user =
-      JSON.parse(localStorage.getItem("user"));
-
-    let favorites =
-      JSON.parse(
-        localStorage.getItem("favorites")
-      ) || [];
-
-    // SACAR FAVORITO
-    if(isFavorite) {
-
-      favorites = favorites.filter(
-        fav => fav.id !== car.id
+      const exists = data.find(
+        fav => fav.product.id === car.id
       );
 
-      localStorage.setItem(
-        "favorites",
-        JSON.stringify(favorites)
-      );
+      setIsFavorite(!!exists);
 
-      setIsFavorite(false);
+    });
 
-      return;
-    }
+}, [car.id]);
 
-    // AGREGAR FAVORITO
-    favorites.push(car);
+// FAVORITOS
+function toggleFavorite() {
 
-    localStorage.setItem(
-      "favorites",
-      JSON.stringify(favorites)
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
     );
 
-    setIsFavorite(true);
+  if(!user) return;
 
+  // ELIMINAR
+  if(isFavorite) {
+
+    fetch(
+      `http://localhost:8080/favorites/${user.id}`
+    )
+      .then(res => res.json())
+
+      .then(data => {
+
+        const favorite =
+          data.find(
+            fav =>
+              fav.product.id === car.id
+          );
+
+        if(favorite) {
+
+          fetch(
+           ` http://localhost:8080/favorites/${favorite.id}`,
+            {
+              method: "DELETE"
+            }
+          )
+            .then(() => {
+
+              setIsFavorite(false);
+
+            });
+
+        }
+
+      });
+
+    return;
   }
 
-  return (
+  // AGREGAR
+  fetch(
+    "http://localhost:8080/favorites",
+    {
 
-    <div className="card">
+      method: "POST",
 
-      {/* FAVORITO */}
-      <button
-        className="favorite-btn"
-        onClick={toggleFavorite}
-      >
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
 
-        {isFavorite ? "❤️" : "🤍"}
+      body: JSON.stringify({
 
-      </button>
+        user: {
+          id: user.id
+        },
 
+        product: {
+          id: car.id
+        }
+
+      })
+
+    }
+  )
+    .then(() => {
+
+      setIsFavorite(true);
+
+    });
+   }
+   return( 
+     <div className="card">
       <img
         src={car.image}
         alt={car.name}

@@ -1,6 +1,13 @@
 import "./WhatsAppButton.css";
+import { useState } from "react";
 
 function WhatsAppButton() {
+
+  const [message, setMessage]
+    = useState("");
+
+  const [error, setError]
+    = useState("");
 
   function openWhatsApp() {
 
@@ -8,18 +15,23 @@ function WhatsAppButton() {
 
       window.open(
         "https://wa.me/5491154224327?text=Hola! Tengo una consulta sobre un vehículo 🚗",
-        "_blank"
+        "_blank",
+        "noopener,noreferrer"
       );
 
-      alert(
+      setMessage(
         "Redirigiendo a WhatsApp ✅"
       );
 
+      setError("");
+
     } catch (error) {
 
-      alert(
+      setError(
         "No se pudo abrir WhatsApp 😢"
       );
+
+      setMessage("");
 
     }
 
@@ -27,14 +39,34 @@ function WhatsAppButton() {
 
   return (
 
-    <button
-      className="whatsapp-btn"
-      onClick={openWhatsApp}
-    >
+    <>
 
-      💬
+      {message && (
 
-    </button>
+        <div className="whatsapp-message">
+          {message}
+        </div>
+
+      )}
+
+      {error && (
+
+        <div className="whatsapp-error">
+          {error}
+        </div>
+
+      )}
+
+      <button
+        className="whatsapp-btn"
+        onClick={openWhatsApp}
+      >
+
+        💬
+
+      </button>
+
+    </>
 
   );
 }

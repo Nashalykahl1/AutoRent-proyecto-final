@@ -12,6 +12,7 @@ import ReservationPage from "./pages/ReservationPage";
 import ReservationSuccess from "./pages/ReservationSuccess";
 import HistoryPage from "./pages/HistoryPage";
 import WhatsAppButton from "./components/WhatsAppButton";
+import PrivateRoute from "./components/PrivateRoute";
 
 
 
@@ -24,13 +25,32 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/category/:category" element={<CategoryPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+      <Route path="/admin" element={
+    <PrivateRoute>
+      <AdminPage />
+    </PrivateRoute>
+        }
+       />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/favorites"element={<FavoritesPage />}/>
-        <Route path="/reservation/:id" element={<ReservationPage />} />
+        <Route path="/favorites" element={
+    <PrivateRoute>
+      <FavoritesPage />
+    </PrivateRoute>
+          }
+          />
+          <Route path="/reservation/:id" element={
+    <PrivateRoute>
+      <ReservationPage />
+    </PrivateRoute>
+        }
+       />
         <Route path="/reservation-success" element={<ReservationSuccess />} />
-        <Route path="/history" element={<HistoryPage />}
+      <Route path="/history"element={
+    <PrivateRoute>
+      <HistoryPage />
+    </PrivateRoute>
+  }
 />
       </Routes>
 

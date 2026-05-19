@@ -2,13 +2,14 @@ package com.Autorent.backend.controller;
 
 import com.Autorent.backend.model.Feature;
 import com.Autorent.backend.service.FeatureService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/features")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class FeatureController {
 
     private final FeatureService service;
@@ -20,28 +21,61 @@ public class FeatureController {
     }
 
     @GetMapping
-    public List<Feature> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<Feature>>
+    getAll() {
+
+        return ResponseEntity.ok(
+                service.getAll()
+        );
+
     }
 
     @PostMapping
-    public Feature save(
+    public ResponseEntity<?> save(
             @RequestBody Feature feature
     ) {
-        return service.save(feature);
+
+        try {
+
+            return ResponseEntity.ok(
+                    service.save(feature)
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 
     @DeleteMapping("/{id}")
-    public void delete(
+    public ResponseEntity<?> delete(
             @PathVariable Long id
     ) {
 
-        service.delete(id);
+        try {
+
+            service.delete(id);
+
+            return ResponseEntity.ok(
+                    "Característica eliminada"
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
 
     @PutMapping("/{id}")
-    public Feature update(
+    public ResponseEntity<?> update(
 
             @PathVariable Long id,
 
@@ -49,7 +83,20 @@ public class FeatureController {
 
     ) {
 
-        return service.update(id, feature);
+        try {
+
+            return ResponseEntity.ok(
+                    service.update(id, feature)
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
+
 }

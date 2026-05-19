@@ -1,7 +1,10 @@
 package com.Autorent.backend.controller;
 
+import com.Autorent.backend.dto.UserDTO;
 import com.Autorent.backend.model.User;
 import com.Autorent.backend.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,41 +12,98 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService service;
 
-    public UserController(UserService service) {
+    public UserController(
+            UserService service
+    ) {
         this.service = service;
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<User>>
+    getAll() {
+
+        return ResponseEntity.ok(
+                service.getAll()
+        );
+
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return service.register(user);
+    public ResponseEntity<?> register(
+            @Valid @RequestBody User user
+    ) {
+
+        try {
+
+            UserDTO dto =
+                    service.register(user);
+
+            return ResponseEntity.ok(dto);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> login(
+            @RequestBody Map<String, String> body
+    ) {
 
-        return service.login(
-                body.get("email"),
-                body.get("password")
-        );
+        try {
+
+            UserDTO dto =
+                    service.login(
+                            body.get("email"),
+                            body.get("password")
+                    );
+
+            return ResponseEntity.ok(dto);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 
     @PutMapping("/{id}")
-    public User update(
+    public ResponseEntity<?> update(
+
             @PathVariable Long id,
-            @RequestBody User user
+
+            @Valid @RequestBody User user
+
     ) {
 
-        return service.update(id, user);
+        try {
+
+            UserDTO dto =
+                    service.update(id, user);
+
+            return ResponseEntity.ok(dto);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
+
 }

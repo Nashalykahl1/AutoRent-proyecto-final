@@ -18,16 +18,30 @@ public class FeatureService {
     }
 
     public List<Feature> getAll() {
+
         return repository.findAll();
+
     }
 
-    public Feature save(Feature feature) {
+    public Feature save(
+            Feature feature
+    ) {
+
         return repository.save(feature);
+
     }
 
     public void delete(Long id) {
 
-        repository.deleteById(id);
+        Feature feature =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Característica no encontrada"
+                                )
+                        );
+
+        repository.delete(feature);
 
     }
 
@@ -37,21 +51,23 @@ public class FeatureService {
     ) {
 
         Feature feature =
-                repository.findById(id).orElse(null);
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Característica no encontrada"
+                                )
+                        );
 
-        if(feature != null) {
+        feature.setName(
+                updatedFeature.getName()
+        );
 
-            feature.setName(
-                    updatedFeature.getName()
-            );
+        feature.setIcon(
+                updatedFeature.getIcon()
+        );
 
-            feature.setIcon(
-                    updatedFeature.getIcon()
-            );
+        return repository.save(feature);
 
-            return repository.save(feature);
-        }
-
-        return null;
     }
+
 }
