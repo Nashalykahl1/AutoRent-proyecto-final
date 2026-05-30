@@ -1,7 +1,9 @@
 package com.Autorent.backend.controller;
 
+import com.Autorent.backend.dto.ReviewDTO;
 import com.Autorent.backend.model.Review;
 import com.Autorent.backend.service.ReviewService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<List<Review>>
+    public ResponseEntity<List<ReviewDTO>>
     getReviews(
             @PathVariable Long productId
     ) {
@@ -33,23 +35,13 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveReview(
-            @RequestBody Review review
+    public ResponseEntity<ReviewDTO> saveReview(
+            @Valid @RequestBody Review review
     ) {
 
-        try {
-
-            return ResponseEntity.ok(
-                    service.save(review)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.save(review)
+        );
 
     }
 

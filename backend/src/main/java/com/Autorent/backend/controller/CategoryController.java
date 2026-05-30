@@ -2,6 +2,7 @@ package com.Autorent.backend.controller;
 
 import com.Autorent.backend.model.Category;
 import com.Autorent.backend.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,46 +31,26 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(
-            @RequestBody Category category
+    public ResponseEntity<Category> save(
+            @Valid @RequestBody Category category
     ) {
 
-        try {
-
-            return ResponseEntity.ok(
-                    service.save(category)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.save(category)
+        );
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<String> delete(
             @PathVariable Long id
     ) {
 
-        try {
+        service.delete(id);
 
-            service.delete(id);
-
-            return ResponseEntity.ok(
-                    "Categoría eliminada"
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                "Categoría eliminada"
+        );
 
     }
 

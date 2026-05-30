@@ -1,5 +1,6 @@
 package com.Autorent.backend.service;
 
+import com.Autorent.backend.dto.ReviewDTO;
 import com.Autorent.backend.model.Review;
 import com.Autorent.backend.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,40 @@ public class ReviewService {
         this.repository = repository;
     }
 
-    public List<Review> getByProduct(
+    private ReviewDTO toDTO(
+            Review review
+    ) {
+
+        return new ReviewDTO(
+
+                review.getId(),
+
+                review.getUserName(),
+
+                review.getRating(),
+
+                review.getComment(),
+
+                review.getDate(),
+
+                review.getProduct().getId()
+
+        );
+
+    }
+    public List<ReviewDTO> getByProduct(
             Long productId
     ) {
 
         return repository.findByProductId(
-                productId
-        );
+                productId)
+                .stream()
+                .map(this::toDTO)
+                .toList();
 
     }
 
-    public Review save(
+    public ReviewDTO save(
             Review review
     ) {
 
@@ -42,10 +66,12 @@ public class ReviewService {
 
         }
 
-        return repository.save(
-                review
-        );
+        Review saved =
+                repository.save(review);
+
+        return toDTO(saved);
 
     }
 
 }
+

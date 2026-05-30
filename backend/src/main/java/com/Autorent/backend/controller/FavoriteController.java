@@ -1,5 +1,6 @@
 package com.Autorent.backend.controller;
 
+import com.Autorent.backend.dto.FavoriteDTO;
 import com.Autorent.backend.model.Favorite;
 import com.Autorent.backend.service.FavoriteService;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Favorite>>
+    public ResponseEntity<List<FavoriteDTO>>
     getFavorites(
             @PathVariable Long userId
     ) {
@@ -31,49 +32,32 @@ public class FavoriteController {
         );
 
     }
-
     @PostMapping
     public ResponseEntity<?> save(
             @RequestBody Favorite favorite
     ) {
 
-        try {
+        System.out.println(favorite.getUser());
+        System.out.println(favorite.getProduct());
 
-            return ResponseEntity.ok(
-                    service.save(favorite)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.save(favorite)
+        );
 
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<String> delete(
             @PathVariable Long id
     ) {
 
-        try {
+        service.delete(id);
 
-            service.delete(id);
-
-            return ResponseEntity.ok(
-                    "Favorito eliminado"
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                "Favorito eliminado"
+        );
 
     }
+
+
 
 }

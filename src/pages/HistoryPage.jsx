@@ -1,30 +1,61 @@
 import "./HistoryPage.css";
+import { useEffect, useState } from "react";
 
 function HistoryPage() {
 
   const user = JSON.parse(
     localStorage.getItem("user")
   );
+  
+ const [reservations, setReservations]
+  = useState([]);
+  const [products, setProducts] =
+  useState([]);
 
-  const reservations = [
+useEffect(() => {
 
-    {
-      id: 1,
-      product: "BMW M4",
-      reservationDate: "12/05/2026",
-      useDate: "20/05/2026 al 25/05/2026"
-    },
+  if (!user) return;
 
-    {
-      id: 2,
-      product: "Audi A3",
-      reservationDate: "02/05/2026",
-      useDate: "10/05/2026 al 15/05/2026"
-    }
+  fetch(
+   ` http://localhost:8080/reservations/${user.id}`
+  )
+  .then(res => {
+  console.log("STATUS RESERVAS", res.status);
+  return res.json();
+})
 
-  ];
+    .then(data => {
+  if (!Array.isArray(data)) {
 
-  if (!user) {
+    setReservations([]);
+    return;
+
+  }
+    setReservations(data);
+     })
+     
+    .catch(err => {
+    console.log(
+    "Error al traer reservas",
+    err
+  );
+    }); 
+
+    fetch("http://localhost:8080/products")
+    .then(res => {
+  console.log("STATUS PRODUCTS", res.status);
+  return res.json();
+})
+  .then(data => {
+
+    setProducts(data);
+
+  });
+
+
+}, []);
+
+if (!user) {
 
     return (
 
@@ -51,21 +82,27 @@ function HistoryPage() {
       <div className="history-list">
 
         {reservations.map((reservation) => (
-
+        
           <div
             className="history-card"
             key={reservation.id}
           >
 
             <h2>
-              {reservation.product}
+           {
+      products.find(
+        p => p.id === reservation.productId
+       )?.name || "Auto no encontrado"
+      }
             </h2>
 
             <p>
 
               📅 Reserva realizada:
               {" "}
-              {reservation.reservationDate}
+              {new Date(
+               reservation.startDate
+                  ).toLocaleDateString()}
 
             </p>
 
@@ -73,7 +110,15 @@ function HistoryPage() {
 
               🚗 Fecha de uso:
               {" "}
-              {reservation.useDate}
+              {new Date(
+              reservation.startDate
+                 ).toLocaleDateString()}
+
+                  {" "}al{" "}
+
+            {new Date(
+                reservation.endDate
+               ).toLocaleDateString()}
 
             </p>
 

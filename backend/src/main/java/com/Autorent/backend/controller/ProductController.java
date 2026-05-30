@@ -1,7 +1,9 @@
 package com.Autorent.backend.controller;
 
+import com.Autorent.backend.dto.ProductDTO;
 import com.Autorent.backend.model.Product;
 import com.Autorent.backend.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 @CrossOrigin(origins = "http://localhost:3000")
+
 public class ProductController {
 
     private final ProductService service;
@@ -21,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>>
+    public ResponseEntity<List<ProductDTO>>
     getAll() {
 
         return ResponseEntity.ok(
@@ -41,23 +44,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(
+    public ResponseEntity<ProductDTO> getById(
             @PathVariable Long id
     ) {
 
-        try {
-
-            return ResponseEntity.ok(
-                    service.findById(id)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.findById(id)
+        );
 
     }
 
@@ -72,73 +65,43 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(
-            @RequestBody Product p
+    public ResponseEntity<Product> create(
+            @Valid @RequestBody Product p
     ) {
 
-        try {
-
-            return ResponseEntity.ok(
-                    service.save(p)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.save(p)
+        );
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<Product> update(
 
             @PathVariable Long id,
 
-            @RequestBody Product p
+            @Valid @RequestBody Product p
 
     ) {
 
-        try {
+        p.setId(id);
 
-            p.setId(id);
-
-            return ResponseEntity.ok(
-                    service.save(p)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.save(p)
+        );
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<String> delete(
             @PathVariable Long id
     ) {
 
-        try {
+        service.delete(id);
 
-            service.delete(id);
-
-            return ResponseEntity.ok(
-                    "Producto eliminado"
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                "Producto eliminado"
+        );
 
     }
 

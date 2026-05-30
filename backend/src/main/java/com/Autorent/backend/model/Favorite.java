@@ -14,8 +14,10 @@ public class Favorite {
     private Long id;
 
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
-    private Product product;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -21,17 +21,11 @@ function CategoryPage() {
 
         if (!Array.isArray(data)) return;
 
-        const filtered = data.filter(
+       const filteredCars = data.filter(
+  car => car.categoryName?.toLowerCase() === category.toLowerCase()
+);
+  setCars(filteredCars);
 
-          car =>
-
-            car.category &&
-            car.category.toLowerCase()
-              === category.toLowerCase()
-
-        );
-
-        setCars(filtered);
 
       });
 

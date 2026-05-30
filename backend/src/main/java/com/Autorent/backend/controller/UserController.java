@@ -6,9 +6,8 @@ import com.Autorent.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -34,54 +33,34 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<UserDTO> register(
             @Valid @RequestBody User user
     ) {
 
-        try {
+        UserDTO dto =
+                service.register(user);
 
-            UserDTO dto =
-                    service.register(user);
-
-            return ResponseEntity.ok(dto);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(dto);
 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
+    public ResponseEntity<UserDTO> login(
             @RequestBody Map<String, String> body
     ) {
 
-        try {
+        UserDTO dto =
+                service.login(
+                        body.get("email"),
+                        body.get("password")
+                );
 
-            UserDTO dto =
-                    service.login(
-                            body.get("email"),
-                            body.get("password")
-                    );
-
-            return ResponseEntity.ok(dto);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(dto);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<UserDTO> update(
 
             @PathVariable Long id,
 
@@ -89,21 +68,10 @@ public class UserController {
 
     ) {
 
-        try {
+        UserDTO dto =
+                service.update(id, user);
 
-            UserDTO dto =
-                    service.update(id, user);
-
-            return ResponseEntity.ok(dto);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(dto);
 
     }
-
 }

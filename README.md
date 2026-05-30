@@ -1,221 +1,164 @@
-AUTORENT 🚗
+AutoRent
 
-Descripción:
+Aplicación web para alquiler de vehículos desarrollada con React, Spring Boot y MySQL/H2.
 
-*AutoRent es una aplicación full stack desarrollada con React y Spring Boot para la gestión y reserva de vehículos.
-
-*El proyecto permite:
-
-*Registro e inicio de sesión de usuarios
-
-*Gestión de productos (autos)
-
-*Sistema de favoritos
-
-*Sistema de reseñas
-
-*Reservas
-
-*Panel de administración
-
-*Seguridad con Spring Security
-
-*Contraseñas encriptadas con BCrypt
-
-TECNOLOGÍAS UTILIZADAS:
+Tecnologías utilizadas
 
 Frontend
 
-*React
-
-*React Router
-
-*CSS
-
-*Fetch API
-
-*LocalStorage
-
-----
+- React
+- React Router
+- CSS
 
 Backend
 
-*Java 17
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- Hibernate
+- Lombok
 
-*Spring Boot
+Base de datos
 
-*Spring Data JPA
+- MySQL / H2
 
-*Spring Security
+---
 
-*H2 Database
-
-*Maven
-
-*Lombok
-
-
-CÓMO EJECUTAR EL PROYECTO:
+Instalación y ejecución
 
 Backend
 
-1. Abrir la carpeta backend en IntelliJ IDEA o VS Code.
+1. Abrir el proyecto backend en IntelliJ IDEA.
+2. Configurar la base de datos en "application.properties".
+3. Ejecutar la clase principal:
 
-2. Verificar que Java 17 esté instalado.
+BackendApplication
 
-3. Instalar dependencias Maven:
-mvn clean install
+El servidor quedará disponible en:
 
-4. Ejecutar la aplicación Spring Boot.
-
-5. El backend correrá en:
-http://localhost:8080
-
-
+ http://localhost:8080
+ 
 ---
 
 Frontend
 
-1. Abrir la carpeta frontend.
+1. Abrir el proyecto frontend.
 
 2. Instalar dependencias:
+
 npm install
 
-3. Ejecutar React:
+3. Ejecutar:
+
 npm start
 
-4. El frontend correrá en:
+La aplicación quedará disponible en:
+
 http://localhost:3000
 
+---
 
-BASE DE DATOS:
+Configuración de la base de datos
 
-El proyecto utiliza H2 Database.
+Configurar los siguientes parámetros en:
 
-Consola H2
-http://localhost:8080/h2-console
+src/main/resources/application.properties
 
-Configuración
+Ejemplo:
 
-JDBC URL:
-jdbc:h2:file:./data/autosdb
+spring.datasource.url=jdbc:mysql://localhost:3306/autorent
+spring.datasource.username=root
+spring.datasource.password=tu_password
 
-User:
-sa
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
 
-Password:
-(vacío)
+---
 
-
-FUNCIONALIDADES IMPLEMENTADAS:
+Funcionalidades implementadas
 
 Usuarios
 
-Registro
+- Registro de usuarios.
+- Inicio de sesión.
+- Edición de perfil.
+- Roles de administrador.
 
-Login
+Productos (Vehículos)
 
-Actualización de usuario
-
-Roles de administrador
-
-Contraseñas encriptadas con BCrypt
-
-Validaciones con @Valid
-
-
-
----
-
-Productos
-
-Listado de productos
-Productos recomendados
-Productos aleatorios
-Crear producto
-Editar producto
-Eliminar producto
-Relación JPA con categorías
-
----
-
-Favoritos
-
-Agregar favoritos
-Eliminar favoritos
-Persistencia en base de datos
-Relación con usuario
-
----
-
-Reseñas
-
-Crear reseñas
-Consultar reseñas por producto
-Persistencia backend
-
----
+- Listado de vehículos.
+- Detalle de vehículo.
+- Filtrado por categorías.
+- Vehículos recomendados.
+- Gestión de productos desde administración.
 
 Reservas
 
-Crear reservas
-Consultar reservas por usuario
-Persistencia backend
+- Crear reservas.
+- Visualizar historial de reservas.
+- Consulta de reservas por usuario.
 
----
+Favoritos
 
-Seguridad
+- Agregar vehículos a favoritos.
+- Eliminar favoritos.
+- Listado de favoritos del usuario.
 
-El proyecto utiliza Spring Security.
-Características
-Protección de rutas
-Endpoints configurados por permisos
-Contraseñas encriptadas
-Validaciones backend
-DTOs para proteger información sensible
-Manejo global de excepciones
+Valoraciones
 
----
+- Visualización de reseñas y puntuaciones de vehículos.
 
-Arquitectura
+Administración
 
-El backend está organizado utilizando arquitectura en capas:
-Controller
-Service
-Repository
-Model
-DTO
-Config
-Exception
+- Alta de productos.
+- Modificación de productos.
+- Eliminación de productos.
+- Gestión de categorías y características.
 
 ---
 
 Endpoints principales
 
 Usuarios
+
 POST /users/register
 POST /users/login
 PUT /users/{id}
+GET /users
 
 Productos
+
 GET /products
-GET /products/random
-GET /products/recommended
+GET /products/{id}
 POST /products
 PUT /products/{id}
-DELETE /products/{id}
+ DELETE /products/{id}
 
-Favoritos
-GET /favorites/{userId}
-POST /favorites
-DELETE /favorites/{id}
+ Reservas
 
-Reviews
-GET /reviews/{productId}
-POST /reviews
-
-Reservas
 GET /reservations/{userId}
 POST /reservations
 
+Favoritos
 
+GET /favorites
+POST /favorites
+DELETE /favorites/{id}
+
+---
+
+Cómo probar la aplicación
+
+1. Registrar un usuario.
+2. Iniciar sesión.
+3. Explorar vehículos disponibles.
+4. Agregar vehículos a favoritos.
+5. Realizar una reserva.
+6. Consultar el historial de reservas.
+7. Acceder al panel de administración con un usuario administrador.
+
+---
+
+Autor
+
+Proyecto desarrollado como trabajo final del curso Professional Developer.

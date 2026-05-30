@@ -75,40 +75,27 @@ const [reviewSuccess, setReviewSuccess]
 
   useEffect(() => {
 
-    fetch("http://localhost:8080/products")
+    fetch(`http://localhost:8080/products/${id}`)
+  .then(res => res.json())
+  .then(foundCar => {
+
+    setCar(foundCar);
+
+    fetch(`http://localhost:8080/reviews/${id}`)
       .then(res => res.json())
-      .then(data => {
+      .then(data => setReviews(data));
 
-        const foundCar = data.find(
-          c => Number(c.id) === Number(id)
-        );
+    setError(false);
 
-        if (foundCar) {
+  })
 
-          setCar(foundCar);
+  .catch(err => {
 
-          fetch(`http://localhost:8080/reviews/${id}`)
-           .then(res => res.json())
-           .then(data => setReviews(data));
+    console.error(err);
 
-          setError(false);
+    setError(true);
 
-        } else {
-
-          setError(true);
-
-        }
-
-      })
-
-      .catch(err => {
-
-        console.error(err);
-
-        setError(true);
-
-      });
-
+  });
   }, [id]);
 
   // LINK
@@ -392,13 +379,16 @@ fetch("http://localhost:8080/reviews", {
                     className="feature-card"
                     key={feature.id}
                   >
-
-                    <span className="feature-icon">
-
-                      {feature.icon}
-
-                    </span>
-
+   <span className="feature-icon">
+   <i
+      className={
+      feature.icon.includes("bluetooth")
+          ? `fa-brands ${feature.icon}`
+        : `fa-solid ${feature.icon}`
+    }
+    ></i>
+   </span>
+                    
                     <p>
                       {feature.name}
                     </p>

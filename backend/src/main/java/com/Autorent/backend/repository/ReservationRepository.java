@@ -13,4 +13,6 @@ public interface ReservationRepository
             Long userId
     );
 
+    List<Reservation> findByProduct_Id(Long id);
+
 }

@@ -1,47 +1,35 @@
 import { useState, useEffect } from "react";
 import "./AdminPage.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 
 function AdminPage() {
+   const navigate = useNavigate();
 
-  const navigate = useNavigate();
+  // 1. VALIDACIÓN DE ADMIN (Lo primero que se ejecuta)
+  const user = JSON.parse(localStorage.getItem("user"));
 
+  // Definición de todos los estados
   const [products, setProducts] = useState([]);
-
-  const [users, setUsers] = useState([]);
-
+   const [users, setUsers] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [editingFeature, setEditingFeature] = useState(null);
 
-  const [categories, setCategories]
-    = useState([]);
-
-    const [successMessage, setSuccessMessage]
-  = useState("");
-
-const [errorMessage, setErrorMessage]
-  = useState("");
-
-  const [editingFeature, setEditingFeature]
-    = useState(null);
-
-  const [feature, setFeature] = useState({
-
+   const [feature, setFeature] = useState({
     name: "",
     icon: ""
-
-  });
+   });
 
   const [category, setCategory] = useState({
-
-    title: "",
+     title: "",
     description: "",
     image: ""
-
-  });
+   });
 
   const [product, setProduct] = useState({
-
-    name: "",
+     name: "",
     description: "",
     longDescription: "",
     image: "",
@@ -50,605 +38,314 @@ const [errorMessage, setErrorMessage]
     category: "",
     location: "",
     recommended: false
+   });
 
-  });
-
-  // TRAER DATOS
+  // 2. EFECTOS (Solo si es admin)
   useEffect(() => {
-
-    fetchProducts();
-
-    fetchUsers();
-
-    fetchFeatures();
-
-    fetchCategories();
-
+    if (user?.admin) {
+      fetchProducts();
+      fetchUsers();
+      fetchFeatures();
+      fetchCategories();
+    }
   }, []);
 
-  // PRODUCTOS
-  function fetchProducts() {
-
-    fetch("http://localhost:8080/products")
-      .then(res => res.json())
-      .then(data => setProducts(data));
-
+  // Si no es admin, cortamos la ejecución acá y redirigimos
+  if (!user?.admin) {
+    return <Navigate to="/" />;
   }
 
-  // USUARIOS
-  function fetchUsers() {
+  // Si es mobile, mostramos el mensaje y no renderizamos el resto
+  if (window.innerWidth < 768) {
+    return (
+      <div className="mobile-message">
+        <h2>El panel de administración no está disponible en móviles 📱</h2>
+      </div>
+    );
+  }
 
+  
+  // --- FUNCIONES DE FETCH Y HANDLERS  ---
+
+  function fetchProducts() {
+   fetch("http://localhost:8080/products")
+      .then(res => res.json())
+      .then(data => setProducts(data));
+   }
+
+   function fetchUsers() {
     fetch("http://localhost:8080/users")
       .then(res => res.json())
       .then(data => setUsers(data));
-
-  }
-
-  // FEATURES
+   }
+ 
   function fetchFeatures() {
-
-    fetch("http://localhost:8080/features")
+     fetch("http://localhost:8080/features")
       .then(res => res.json())
       .then(data => setFeatures(data));
+   }
 
-  }
-
-  // CATEGORIES
-  function fetchCategories() {
-
+   function fetchCategories() {
     fetch("http://localhost:8080/categories")
       .then(res => res.json())
-      .then(data => setCategories(data));
-
+       .then(data => setCategories(data));
   }
-
-  // INPUT PRODUCTO
+   
   function handleChange(e) {
-
-    const {
-      name,
-      value,
-      type,
-      checked
-    } = e.target;
-
+    const { name, value, type, checked } = e.target;
     setProduct({
-
-      ...product,
-
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value
-
+       ...product,
+      [name]: type === "checkbox" ? checked : value
     });
+   }
 
-  }
-
-  // INPUT CATEGORY
-  function handleCategoryChange(e) {
-
+   function handleCategoryChange(e) {
     const { name, value } = e.target;
-
-    setCategory({
-
-      ...category,
-
-      [name]: value
-
-    });
-
+    setCategory({ ...category, [name]: value });
   }
 
-  // INPUT FEATURE
-  function handleFeatureChange(e) {
-
+   function handleFeatureChange(e) {
     const { name, value } = e.target;
-
-    setFeature({
-
-      ...feature,
-
-      [name]: value
-
-    });
-
+    setFeature({ ...feature, [name]: value });
   }
 
-  // AGREGAR PRODUCTO
-function handleSubmit(e) {
-
+  function handleSubmit(e) {
     e.preventDefault();
-
-    console.log("submit funcionando");
-console.log(product);
-
-    const newProduct = {
-
-        ...product,
-
-        price: Number(product.price),
-
-        images: product.images,
-
-        category: {
-            id: Number(product.category)
-        }
-
-    };
-
-    fetch("http://localhost:8080/products", {
-
-        method: "POST",
-
-        headers: {
-            "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify(newProduct)
-
-    })
-
-    .then(res => {
-
-        if (!res.ok) {
-
-            throw new Error("Error al agregar producto");
-
-        }
-
-        return res.json();
-
-    })
-
-    .then(() => {
-
-        setSuccessMessage(
-            "Producto agregado correctamente 😎"
-        );
-
-        setErrorMessage("");
-
-        fetchProducts();
-
-        setProduct({
-
-            name: "",
-            description: "",
-            longDescription: "",
-            image: "",
-            images: [],
-            price: "",
-            category: "",
-            location: "",
-            recommended: false
-
-        });
-
-    })
-
-    .catch(err => {
-
-        console.log(err);
-
-        setErrorMessage(err.message);
-
-        setSuccessMessage("");
-
-    });
-
-}
-
-  // AGREGAR CATEGORY
-  function handleCategorySubmit(e) {
-
-    e.preventDefault();
-
-    fetch("http://localhost:8080/categories", {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(category)
-
-    })
-
-      .then(() => {
-
-        setSuccessMessage(
-  "Categoría agregada 😎"
-     );
-      setErrorMessage("");
-
-        fetchCategories();
-
-        setCategory({
-
-          title: "",
-          description: "",
-          image: ""
-
-        });
-
-      });
-
-  }
-
-  // FEATURES
-  function handleFeatureSubmit(e) {
-
-    e.preventDefault();
-
-    // EDITAR
-    if(editingFeature) {
-
-      fetch(
-        `http://localhost:8080/features/${editingFeature.id}`,
-        {
-
-          method: "PUT",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify(feature)
-
-        }
-      )
-
-        .then(() => {
-
-          setSuccessMessage(
-  "Característica editada 😎"
-           );
-
-        setErrorMessage("");
-
-          fetchFeatures();
-
-          setFeature({
-
-            name: "",
-            icon: ""
-
-          });
-
-          setEditingFeature(null);
-
-        });
-
+      // VALIDACIÓN: Evita que se manden productos incompletos
+    if (!product.name.trim() || !product.description.trim() || !product.price || !product.category) {
+      setErrorMessage("Por favor, completá los campos obligatorios del producto ⚠️");
+       setSuccessMessage("");
+        window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+       });
+      return; 
+    }
+
+    if (Number(product.price) <= 0) {
+      setErrorMessage("El precio debe ser un número positivo 💰");
       return;
     }
 
-    // CREAR
-    fetch("http://localhost:8080/features", {
+    const newProduct = {
+  ...product,
 
+  images:
+    product.images
+      .split(",")
+      .map(img => img.trim()),
+
+  price: Number(product.price),
+
+  category: {
+    id: Number(product.category)
+  },
+
+   features: []
+
+};
+    fetch("http://localhost:8080/products", {
       method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(feature)
-
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProduct)
     })
+     
+     .then(res => {
 
-      .then(() => {
+    if (!res.ok) {
 
-        setSuccessMessage(
-  "Característica agregada 😎"
+        return res.text().then(text => {
+
+            throw new Error(
+              text || "Error al agregar producto"
             );
-
-     setErrorMessage("");
-
-        fetchFeatures();
-
-        setFeature({
-
-          name: "",
-          icon: ""
 
         });
 
+    }
+    return res.json();
+    })
+      .then(() => {
+        setSuccessMessage("Producto agregado correctamente 😎");
+        setErrorMessage("");
+         fetchProducts();
+        setProduct({
+          name: "", description: "", longDescription: "", image: "",
+          images: [], price: "", category: "", location: "", recommended: false
+        });
+        fetchProducts();
+      })
+      .catch(err => {
+        setErrorMessage(err.message);
+         setSuccessMessage("");
       });
-
   }
 
-  // ELIMINAR PRODUCTO
+   function handleCategorySubmit(e) {
+    e.preventDefault();
+  
+    if (
+  !category.title ||
+  !category.description ||
+  !category.image
+ ) {
+
+  setErrorMessage(
+    "Completá todos los campos de categoría."
+  );
+
+  setSuccessMessage("");
+
+
+  return;
+
+}
+
+     fetch("http://localhost:8080/categories", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(category)
+     })
+      .then(() => {
+        setSuccessMessage("Categoría agregada 😎");
+        setErrorMessage("");
+        fetchCategories();
+        setCategory({ title: "", description: "", image: "" });
+      });
+   }
+
+   function handleFeatureSubmit(e) {
+    e.preventDefault();
+
+    if (
+  !feature.name ||
+  !feature.icon
+    ) {
+
+  setErrorMessage(
+    "Completá todos los campos de la característica."
+  );
+
+  setSuccessMessage("");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  return;
+
+}
+
+    if (editingFeature) {
+      fetch(`http://localhost:8080/features/${editingFeature.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(feature)
+      })
+        .then(() => {
+          setSuccessMessage("Característica editada");
+          setErrorMessage("");
+          fetchFeatures();
+          setFeature({ name: "", icon: "" });
+          setEditingFeature(null);
+         });
+      return;
+    }
+
+     fetch("http://localhost:8080/features", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(feature)
+     })
+       .then(() => {
+        setSuccessMessage("Característica agregada 😎");
+        setErrorMessage("");
+        fetchFeatures();
+        setFeature({ name: "", icon: "" });
+      });
+   }
+ 
   function deleteProduct(id) {
-
-    fetch(
-      `http://localhost:8080/products/${id}`,
-      {
-        method: "DELETE"
-      }
-    )
+    fetch(`http://localhost:8080/products/${id}`, { method: "DELETE" })
       .then(() => fetchProducts());
-
-  }
-
-  // ELIMINAR FEATURE
+    }
+ 
   function deleteFeature(id) {
-
-    fetch(
-      `http://localhost:8080/features/${id}`,
-      {
-        method: "DELETE"
-      }
-    )
-      .then(() => fetchFeatures());
-
+    fetch(`http://localhost:8080/features/${id}`, { method: "DELETE" })
+       .then(() => fetchFeatures());
   }
-
-  // ELIMINAR CATEGORY
+ 
   function deleteCategory(id, title) {
-
-    const confirmDelete = window.confirm(
+     const confirmDelete = window.confirm(
       `¿Seguro que querés eliminar la categoría ${title}?`
     );
-
-    if (!confirmDelete) return;
-
-    fetch(
-      `http://localhost:8080/categories/${id}`,
-      {
-        method: "DELETE"
-      }
-    )
+     if (!confirmDelete) return;
+    fetch(`http://localhost:8080/categories/${id}`, { method: "DELETE" })
       .then(() => {
-
-        setSuccessMessage(
-  "Categoría eliminada 😎"
-            );
-
-    setErrorMessage("");
-
-        fetchCategories();
-
+        setSuccessMessage("Categoría eliminada 😎");
+        setErrorMessage("");
+         fetchCategories();
       });
+   }
 
-  }
-
-  // ADMIN
-  function toggleAdmin(user) {
-
-    fetch(
-      `http://localhost:8080/users/${user.id}`,
-      {
-
-        method: "PUT",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-
-          ...user,
-
-          admin: !user.admin
-
-        })
-
-      }
-    )
+  function toggleAdmin(userToToggle) {
+    fetch(`http://localhost:8080/users/${userToToggle.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...userToToggle, admin: !userToToggle.admin })
+    })
       .then(() => fetchUsers());
-
-  }
-
-  // MOBILE
-  if (window.innerWidth < 768) {
-
-    return (
-
-      <div className="mobile-message">
-
-        <h2>
-          El panel de administración
-          no está disponible
-          en móviles 📱
-        </h2>
-
-      </div>
-
-    );
-  }
+   }
 
   return (
-
-    <div className="admin">
-
-      <button
-        className="back-home"
-        onClick={() => navigate("/")}
-      >
-
+     <div className="admin">
+      <button className="back-home" onClick={() => navigate("/")}>
         ← Volver al inicio
+       </button>
+      <h1>Panel Administrador</h1>
 
-      </button>
-
-      <h1>
-        Panel Administrador
-      </h1>
-
-      {successMessage && (
-
-  <p className="success-message">
-    {successMessage}
-  </p>
-
-)}
-
-{errorMessage && (
-
-  <p className="error-message">
-    {errorMessage}
-  </p>
-
-)}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       {/* CATEGORÍAS */}
       <h2>Agregar categoría</h2>
-
-      <form onSubmit={handleCategorySubmit}>
-
-        <input
-          type="text"
-          name="title"
-          placeholder="Título"
-          value={category.title}
-          onChange={handleCategoryChange}
-        />
-
-        <input
-          type="text"
-          name="description"
-          placeholder="Descripción"
-          value={category.description}
-          onChange={handleCategoryChange}
-        />
-
-        <input
-          type="text"
-          name="image"
-          placeholder="Imagen"
-          value={category.image}
-          onChange={handleCategoryChange}
-        />
-
-        <button type="submit">
-
-          Agregar categoría
-
-        </button>
-
+       <form onSubmit={handleCategorySubmit}>
+        <input type="text" name="title" placeholder="Título" value={category.title} onChange={handleCategoryChange} />
+        <input type="text" name="description" placeholder="Descripción" value={category.description} onChange={handleCategoryChange} />
+        <input type="text" name="image" placeholder="Imagen" value={category.image} onChange={handleCategoryChange} required />
+        <button type="submit">Agregar categoría</button>
       </form>
 
-      {categories.map(category => (
-
-        <div
-          className="product-admin"
-          key={category.id}
-        >
-
-          <h3>
-            {category.title}
-          </h3>
-
-          <p>
-            {category.description}
-          </p>
-
-          <button
-            onClick={() =>
-              deleteCategory(
-                category.id,
-                category.title
-              )
-            }
-          >
-
-            Eliminar
-
-          </button>
-
+      {categories.map(cat => (
+        <div className="product-admin" key={cat.id}>
+          <h3>{cat.title}</h3>
+          <p>{cat.description}</p>
+          <button onClick={() => deleteCategory(cat.id, cat.title)}>Eliminar</button>
         </div>
-
-      ))}
+       ))}
 
       <hr />
 
       {/* FEATURES */}
       <h2>Características</h2>
-
-      <form onSubmit={handleFeatureSubmit}>
-
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={feature.name}
-          onChange={handleFeatureChange}
-        />
-
-        <input
-          type="text"
-          name="icon"
-          placeholder="Icono"
-          value={feature.icon}
-          onChange={handleFeatureChange}
-        />
-
-        <button type="submit">
-
-          {editingFeature
-            ? "Guardar cambios"
-            : "Agregar característica"}
-
-        </button>
-
+       <form onSubmit={handleFeatureSubmit}>
+        <input type="text" name="name" placeholder="Nombre" value={feature.name} onChange={handleFeatureChange} />
+        <input type="text" name="icon" placeholder="Icono" value={feature.icon} onChange={handleFeatureChange} />
+        <button type="submit">{editingFeature ? "Guardar cambios" : "Agregar característica"}</button>
       </form>
 
-      {features.map(feature => (
-
-        <div
-          className="product-admin"
-          key={feature.id}
-        >
-
-          <h3>
-
-            {feature.icon}
-            {" "}
-            {feature.name}
-
-          </h3>
-
+      {features.map(f => (
+        <div className="product-admin" key={f.id}>
+          <h3>{f.icon} {f.name}</h3>
           <div className="feature-buttons">
-
-            <button
-              onClick={() => {
-
-                setFeature({
-
-                  name: feature.name,
-
-                  icon: feature.icon
-
-                });
-
-                setEditingFeature(feature);
-
-              }}
-            >
-
-              Editar
-
-            </button>
-
-            <button
-              onClick={() =>
-                deleteFeature(feature.id)
-              }
-            >
-
-              Eliminar
-
-            </button>
-
-          </div>
-
+            <button onClick={() => { setFeature({ name: f.name, icon: f.icon }); setEditingFeature(f); }}>Editar</button>
+            <button onClick={() => deleteFeature(f.id)}>Eliminar</button>
+           </div>
         </div>
-
-      ))}
-
-      <hr />
-
-      {/* FORMULARIO PRODUCTO */}
+       ))}
+      
+           {/* FORMULARIO PRODUCTO */}
       <form onSubmit={handleSubmit}>
 
         <input
@@ -815,5 +512,6 @@ console.log(product);
 
   );
 }
+
 
 export default AdminPage;

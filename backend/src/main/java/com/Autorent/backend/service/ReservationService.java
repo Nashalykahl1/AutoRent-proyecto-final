@@ -1,9 +1,8 @@
 package com.Autorent.backend.service;
 
+import com.Autorent.backend.dto.ReservationDTO;
 import com.Autorent.backend.model.Reservation;
-
 import com.Autorent.backend.repository.ReservationRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,23 +20,96 @@ public class ReservationService {
 
     }
 
-    public List<Reservation> getByUser(
-            Long userId
+    private ReservationDTO toDTO(
+            Reservation reservation
     ) {
 
-        return repository.findByUserId(
-                userId
+        return new ReservationDTO(
+
+                reservation.getId(),
+
+                reservation.getStartDate(),
+
+                reservation.getEndDate(),
+
+                reservation.getUser().getId(),
+
+                reservation.getProduct().getId()
+
         );
 
     }
 
-    public Reservation save(
+    public List<ReservationDTO> getByUser(
+            Long userId
+    ) {
+
+        return repository.findByUserId(userId)
+                .stream()
+
+                .filter(reservation ->
+
+                        reservation.getProduct() != null &&
+
+                                reservation.getUser() != null
+
+                )
+
+                .map(this::toDTO)
+
+                .toList();
+
+    }
+
+    public List<ReservationDTO> getByProduct(
+            Long id
+    ) {
+
+        return repository.findByProduct_Id(id)
+                .stream()
+
+                .filter(reservation ->
+
+                        reservation.getProduct() != null &&
+
+                                reservation.getUser() != null
+
+                )
+
+                .map(this::toDTO)
+
+                .toList();
+
+    }
+
+    public ReservationDTO save(
             Reservation reservation
     ) {
 
-        return repository.save(
-                reservation
-        );
+        if (
+                reservation.getStartDate() == null
+        ) {
+
+            throw new IllegalArgumentException(
+                    "La fecha de inicio es obligatoria"
+            );
+
+        }
+
+        if (
+                reservation.getEndDate() == null
+        ) {
+
+            throw new IllegalArgumentException(
+                    "La fecha de fin es obligatoria"
+            );
+
+        }
+
+        Reservation saved =
+                repository.save(reservation);
+
+        return toDTO(saved);
 
     }
 

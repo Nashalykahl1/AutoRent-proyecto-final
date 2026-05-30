@@ -70,13 +70,15 @@ useEffect(() => {
 
     .then(data => {
 
-      const exists = data.find(
-        fav => fav.product.id === car.id
-      );
+  if (!Array.isArray(data)) return;
 
-      setIsFavorite(!!exists);
+  const exists = data.find(
+   fav => Number(fav.productId) === Number(car.id)
+  );
 
-    });
+  setIsFavorite(!!exists);
+
+});
 
 }, [car.id]);
 
@@ -98,67 +100,90 @@ function toggleFavorite() {
     )
       .then(res => res.json())
 
-      .then(data => {
+     .then(data => {
 
-        const favorite =
-          data.find(
-            fav =>
-              fav.product.id === car.id
-          );
+  if (!Array.isArray(data)) return;
 
-        if(favorite) {
+  const favorite =
+    data.find(
+      fav => Number(fav.productId) === Number(car.id)
+    );
 
-          fetch(
-           ` http://localhost:8080/favorites/${favorite.id}`,
-            {
-              method: "DELETE"
-            }
-          )
-            .then(() => {
+  if(favorite) {
 
-              setIsFavorite(false);
+    fetch(
+      `http://localhost:8080/favorites/${favorite.id}`,
+      {
+        method: "DELETE"
+      }
+    )
+      .then(() => {
 
-            });
-
-        }
+        setIsFavorite(false);
 
       });
+
+  }
+
+});
+  
 
     return;
   }
 
+  console.log("USER", user);
+console.log("USER ID", Number(user.id));
+console.log("PRODUCT ID", Number(car.id));
   // AGREGAR
-  fetch(
-    "http://localhost:8080/favorites",
-    {
+ fetch(
+  "http://localhost:8080/favorites",
+  {
+    method: "POST",
 
-      method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
 
-      headers: {
-        "Content-Type":
-          "application/json"
+    body: JSON.stringify({
+      user: {
+        id: Number(user.id)
       },
 
-      body: JSON.stringify({
+      product: {
+        id: Number(car.id)
+      }
+    })
+  }
+)
+.then(res => {
 
-        user: {
-          id: user.id
-        },
+  if(!res.ok) {
 
-        product: {
-          id: car.id
-        }
+    throw new Error(
+      "Error al guardar favorito"
+    );
 
-      })
+  }
 
-    }
-  )
-    .then(() => {
+  return res.json();
 
-      setIsFavorite(true);
+})
 
-    });
+.then(data => {
+
+  console.log(data);
+
+  setIsFavorite(true);
+
+})
+
+.catch(err => {
+
+  console.log(err);
+
+});
    }
+   
    return( 
      <div className="card">
       <img
@@ -203,6 +228,13 @@ function toggleFavorite() {
             ${car.price} por día
 
           </span>
+
+          <button
+       className="favorite-btn"
+         onClick={toggleFavorite}
+                 >
+      {isFavorite ? "❤️" : "🤍"}
+            </button>
 
           <button
             onClick={() =>

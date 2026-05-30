@@ -31,51 +31,30 @@ public class FeatureController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(
+    public ResponseEntity<Feature> save(
             @RequestBody Feature feature
     ) {
 
-        try {
-
-            return ResponseEntity.ok(
-                    service.save(feature)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.save(feature)
+        );
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<String> delete(
             @PathVariable Long id
     ) {
 
-        try {
+        service.delete(id);
 
-            service.delete(id);
-
-            return ResponseEntity.ok(
-                    "Característica eliminada"
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                "Característica eliminada"
+        );
 
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<Feature> update(
 
             @PathVariable Long id,
 
@@ -83,19 +62,9 @@ public class FeatureController {
 
     ) {
 
-        try {
-
-            return ResponseEntity.ok(
-                    service.update(id, feature)
-            );
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-
-        }
+        return ResponseEntity.ok(
+                service.update(id, feature)
+        );
 
     }
 

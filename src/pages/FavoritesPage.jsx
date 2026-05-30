@@ -7,16 +7,60 @@ function FavoritesPage() {
   const [favorites, setFavorites]
     = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
 
-    const savedFavorites =
-      JSON.parse(
-        localStorage.getItem("favorites")
-      ) || [];
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
+    );
 
-    setFavorites(savedFavorites);
+  if (!user) return;
 
-  }, []);
+  fetch(
+    `http://localhost:8080/favorites/${user.id}`
+  )
+    .then(res => res.json())
+
+    .then(data => {
+ console.log(data);
+
+  if (!Array.isArray(data)) {
+    return;
+  }
+
+
+  fetch(
+    "http://localhost:8080/products"
+  )
+    .then(res => res.json())
+
+    .then(allProducts => {
+      console.log(allProducts);
+      console.log("FAVORITOS:", data);
+
+const products = data.map(fav => {
+
+  const found = allProducts.find(
+    p => String(p.id) === String(fav.productId)
+  );
+
+  console.log("BUSCANDO:", fav.productId);
+  console.log("ENCONTRADO:", found);
+
+  return found;
+
+});
+
+console.log("PRODUCTS FINAL:", products);
+
+setFavorites(products.filter(Boolean))
+
+
+});
+
+});
+
+}, []);
 
   return (
 
