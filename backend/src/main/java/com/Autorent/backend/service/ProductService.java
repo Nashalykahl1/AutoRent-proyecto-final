@@ -66,9 +66,12 @@ public class ProductService {
 
     }
 
-    public List<Product> getRecommended() {
+    public List<ProductDTO> getRecommended() {
 
-        return repo.findByRecommendedTrue();
+        return repo.findByRecommendedTrue()
+                .stream()
+                .map(this::toDTO)
+                .toList();
 
     }
 
@@ -86,7 +89,7 @@ public class ProductService {
 
     }
 
-    public List<Product> getRandom() {
+    public List<ProductDTO> getRandom() {
 
         List<Product> list =
                 repo.findAll();
@@ -95,6 +98,7 @@ public class ProductService {
 
         return list.stream()
                 .limit(10)
+                .map(this::toDTO)
                 .toList();
 
     }
@@ -113,7 +117,7 @@ public class ProductService {
 
     }
 
-    public Product save(Product p) {
+    public ProductDTO save(Product p) {
 
         if(repo.existsByName(
                 p.getName()
@@ -137,8 +141,8 @@ public class ProductService {
 
         p.setCategory(category);
 
-        return repo.save(p);
-
+        return  toDTO(   repo.save(p)
+);
     }
 
 }

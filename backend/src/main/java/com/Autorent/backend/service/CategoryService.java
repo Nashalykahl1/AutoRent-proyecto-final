@@ -1,5 +1,6 @@
 package com.Autorent.backend.service;
 
+import com.Autorent.backend.dto.CategoryDTO;
 import com.Autorent.backend.model.Category;
 import com.Autorent.backend.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,29 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public List<Category> getAll() {
-        return repository.findAll();
+    private CategoryDTO toDTO(
+            Category category
+    ) {
+
+        return new CategoryDTO(
+                category.getId(),
+                category.getTitle(),
+                category.getDescription(),
+                category.getImage()
+        );
+
     }
 
-    public Category save(Category category) {
-        return repository.save(category);
+    public List<CategoryDTO> getAll() {
+        return repository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public CategoryDTO save(Category category) {
+        return toDTO (repository.save(category)
+        );
     }
 
     public void delete(Long id) {

@@ -1,5 +1,6 @@
 package com.Autorent.backend.service;
 
+import com.Autorent.backend.dto.FeatureDTO;
 import com.Autorent.backend.model.Feature;
 import com.Autorent.backend.repository.FeatureRepository;
 import org.springframework.stereotype.Service;
@@ -17,18 +18,34 @@ public class FeatureService {
         this.repository = repository;
     }
 
-    public List<Feature> getAll() {
-
-        return repository.findAll();
-
-    }
-
-    public Feature save(
+    private FeatureDTO toDTO(
             Feature feature
     ) {
 
-        return repository.save(feature);
+        return new FeatureDTO(
+                feature.getId(),
+                feature.getName(),
+                feature.getIcon()
+        );
 
+    }
+
+    public List<FeatureDTO> getAll() {
+
+        return repository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
+
+    }
+
+    public FeatureDTO save(
+            Feature feature
+    ) {
+
+        return toDTO(
+                repository.save(feature)
+);
     }
 
     public void delete(Long id) {
@@ -45,7 +62,7 @@ public class FeatureService {
 
     }
 
-    public Feature update(
+    public FeatureDTO update(
             Long id,
             Feature updatedFeature
     ) {
@@ -66,8 +83,8 @@ public class FeatureService {
                 updatedFeature.getIcon()
         );
 
-        return repository.save(feature);
-
+        return  toDTO (repository.save(feature)
+);
     }
 
 }

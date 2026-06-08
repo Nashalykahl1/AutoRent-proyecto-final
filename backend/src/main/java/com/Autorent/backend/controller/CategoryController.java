@@ -1,5 +1,6 @@
 package com.Autorent.backend.controller;
 
+import com.Autorent.backend.dto.CategoryDTO;
 import com.Autorent.backend.model.Category;
 import com.Autorent.backend.service.CategoryService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAll() {
+    public ResponseEntity<List<CategoryDTO>> getAll() {
 
         return ResponseEntity.ok(
                 service.getAll()
@@ -31,7 +32,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> save(
+    public ResponseEntity<CategoryDTO> save(
             @Valid @RequestBody Category category
     ) {
 

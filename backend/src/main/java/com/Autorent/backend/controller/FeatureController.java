@@ -1,7 +1,9 @@
 package com.Autorent.backend.controller;
 
+import com.Autorent.backend.dto.FeatureDTO;
 import com.Autorent.backend.model.Feature;
 import com.Autorent.backend.service.FeatureService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ public class FeatureController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Feature>>
+    public ResponseEntity<List<FeatureDTO>>
     getAll() {
 
         return ResponseEntity.ok(
@@ -31,8 +33,8 @@ public class FeatureController {
     }
 
     @PostMapping
-    public ResponseEntity<Feature> save(
-            @RequestBody Feature feature
+    public ResponseEntity<FeatureDTO> save(
+          @Valid @RequestBody Feature feature
     ) {
 
         return ResponseEntity.ok(
@@ -54,11 +56,11 @@ public class FeatureController {
 
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Feature> update(
+    public ResponseEntity<FeatureDTO> update(
 
             @PathVariable Long id,
 
-            @RequestBody Feature feature
+          @Valid  @RequestBody Feature feature
 
     ) {
 

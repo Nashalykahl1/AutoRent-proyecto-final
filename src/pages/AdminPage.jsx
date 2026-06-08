@@ -201,6 +201,29 @@ function AdminPage() {
 
 }
 
+if (category.title.trim().length < 3) {
+  setErrorMessage(
+    "El título debe tener al menos 3 caracteres."
+  );
+  return;
+}
+
+if (category.description.trim().length < 10) {
+  setErrorMessage(
+    "La descripción debe tener al menos 10 caracteres."
+  );
+  return;
+}
+
+if (
+  !category.image.startsWith("http")
+) {
+  setErrorMessage(
+    "La imagen debe ser una URL válida."
+  );
+  return;
+}
+
      fetch("http://localhost:8080/categories", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -313,7 +336,7 @@ function AdminPage() {
        <form onSubmit={handleCategorySubmit}>
         <input type="text" name="title" placeholder="Título" value={category.title} onChange={handleCategoryChange} />
         <input type="text" name="description" placeholder="Descripción" value={category.description} onChange={handleCategoryChange} />
-        <input type="text" name="image" placeholder="Imagen" value={category.image} onChange={handleCategoryChange} required />
+        <input type="text" name="image" placeholder="Imagen" value={category.image} onChange={handleCategoryChange}  />
         <button type="submit">Agregar categoría</button>
       </form>
 

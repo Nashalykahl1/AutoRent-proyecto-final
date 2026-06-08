@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>>
+    public ResponseEntity<List<UserDTO>>
     getAll() {
 
         return ResponseEntity.ok(

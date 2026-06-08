@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<List<Product>>
+    public ResponseEntity<List<ProductDTO>>
     getRandom() {
 
         return ResponseEntity.ok(
@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     @GetMapping("/recommended")
-    public ResponseEntity<List<Product>>
+    public ResponseEntity<List<ProductDTO>>
     getRecommended() {
 
         return ResponseEntity.ok(
@@ -65,7 +65,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> create(
+    public ResponseEntity<ProductDTO> create(
             @Valid @RequestBody Product p
     ) {
 
@@ -76,7 +76,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(
+    public ResponseEntity<ProductDTO> update(
 
             @PathVariable Long id,
 
