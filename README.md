@@ -157,6 +157,32 @@ Cómo probar la aplicación
 6. Consultar el historial de reservas.
 7. Acceder al panel de administración con un usuario administrador.
 
+
+Mejoras implementadas
+
+Durante la etapa de corrección y refactorización del proyecto se realizaron las siguientes mejoras:
+
+Backend
+
+- Implementación de DTOs para User, Product, Category y Feature.
+- Validaciones utilizando Jakarta Validation ("@NotBlank", "@NotNull", "@Positive", "@Email", "@Size").
+- Centralización del manejo de errores mediante "GlobalExceptionHandler".
+- Cifrado de contraseñas utilizando BCrypt.
+- Configuración de Spring Security.
+- Configuración de CORS restringiendo los orígenes permitidos.
+- Mejora en la estructura de servicios y controladores.
+
+Frontend
+
+- Validaciones en formularios administrativos.
+
+Seguridad
+
+- Protección de rutas sensibles.
+- Control de acceso para funcionalidades de usuarios registrados.
+- Preparación de la estructura para gestión de roles y permisos.
+
+
 ---
 
 Autor

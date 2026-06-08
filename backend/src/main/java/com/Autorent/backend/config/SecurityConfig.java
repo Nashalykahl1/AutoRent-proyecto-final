@@ -29,10 +29,33 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
+                        // Rutas públicas para navegación y autenticación
+                        .requestMatchers(
+                                "/users/login",
+                                "/users/register"
+                        ).permitAll()
 
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/products/**",
+                                "/categories/**",
+                                "/features/**",
+                                "/reviews/**"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/favorites/**",
+                                "/reservations/**"
+                        ).permitAll()
+
+                        .requestMatchers("/users/**").permitAll()
+
+                   // Preparado para restricción por roles cuando se implemente JWT
+                      //  .requestMatchers("/users/**").hasRole("ADMIN")
+
+                        .anyRequest().authenticated()
 
                 );
+
         return http.build();
 
     }
